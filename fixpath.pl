@@ -6,8 +6,8 @@
 #
 #	./fixpath [-n] [-v] [-s] [-i] dir
 #
-# @(#) $Revision: 1.4 $
-# @(#) $Id: fixpath.pl,v 1.4 2002/08/20 01:45:31 chongo Exp chongo $
+# @(#) $Revision: 1.5 $
+# @(#) $Id: fixpath.pl,v 1.5 2002/08/20 01:51:10 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
@@ -44,7 +44,7 @@ use Getopt::Std;
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.4 $, 10;
+my $VERSION = substr q$Revision: 1.5 $, 10;
 $VERSION =~ s/\s+$//;
 
 
@@ -102,12 +102,12 @@ sub fixfile
 	    }
 	} elsif ($i == 0) {
 	    # less strict, but avoid problem first file chars
-	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@]|) {
+	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@^!:]|) {
 		$pset[$i] = sprintf("%%%02x", ord($pset[$i]));
 	    }
 	} else {
 	    # less strict on remaining file chars
-	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@+:~!=-]|) {
+	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@^!+:~!=-]|) {
 		$pset[$i] = sprintf("%%%02x", ord($pset[$i]));
 	    }
 	}
