@@ -4,11 +4,14 @@
 #
 # usage:
 #
-#	./fixpath dir
+#	./fixpath [-n] [-v] dir
 #
-# @(#) $Revision$
-# @(#) $Id$
-# @(#) $Source$
+#	-n	do not rename anything
+#	-v	verbose / debug
+#
+# @(#) $Revision: 1.1 $
+# @(#) $Id: fixpath.pl,v 1.1 2001/10/26 14:52:45 chongo Exp $
+# @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
 #
@@ -38,6 +41,8 @@
 #
 use strict;
 use File::Find;
+use vars qw($opt_v $opt_n);
+use Getopt::Std;
 
 
 # version - RCS style *and* usable by MakeMaker
@@ -50,10 +55,10 @@ $VERSION =~ s/\s+$//;
 #
 MAIN: {
 
-    # firewall
+    # parse args
     #
-    if ($#ARGV < 0) {
-	die "usage: $0 dir\n";
+    if (!getopts('vn') || ! defined $ARGV[0]) {
+	die "usage: $0 [-n] [-v] dir ...\n";
     }
 
     # process lines
@@ -91,5 +96,10 @@ sub fixfile
 
     # rename file
     #
-    rename $path, $newpath or die "cannot rename $path $newpath: $!";
+    if ($newpath ne $path) {
+	print "rename $path to $newpath\n" if defined $opt_v;
+	if (! defined $opt_n) {
+	    rename $path, $newpath or die "cannot rename $path $newpath: $!";
+	}
+    }
 }
