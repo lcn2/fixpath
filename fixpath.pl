@@ -6,8 +6,8 @@
 #
 #	./fixpath [-n] [-v] [-s] [-i] dir
 #
-# @(#) $Revision: 1.5 $
-# @(#) $Id: fixpath.pl,v 1.5 2002/08/20 01:51:10 chongo Exp chongo $
+# @(#) $Revision: 1.6 $
+# @(#) $Id: fixpath.pl,v 1.6 2002/08/20 02:06:21 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
@@ -37,6 +37,7 @@
 # requirements
 #
 use strict;
+use bytes;
 use File::Find;
 use vars qw($opt_v $opt_n $opt_s $opt_i);
 use Getopt::Std;
@@ -44,7 +45,7 @@ use Getopt::Std;
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.5 $, 10;
+my $VERSION = substr q$Revision: 1.6 $, 10;
 $VERSION =~ s/\s+$//;
 
 
