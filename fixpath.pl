@@ -6,8 +6,8 @@
 #
 #	./fixpath [-n] [-v] [-s] [-i] dir
 #
-# @(#) $Revision: 1.3 $
-# @(#) $Id: fixpath.pl,v 1.3 2002/08/20 01:25:16 chongo Exp chongo $
+# @(#) $Revision: 1.4 $
+# @(#) $Id: fixpath.pl,v 1.4 2002/08/20 01:45:31 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
@@ -44,7 +44,7 @@ use Getopt::Std;
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.3 $, 10;
+my $VERSION = substr q$Revision: 1.4 $, 10;
 $VERSION =~ s/\s+$//;
 
 
@@ -88,7 +88,7 @@ sub fixfile
 	# ignore %'s if -i
 	#
 	if (defined $opt_i && $pset[$i] =~ /%/) {
-	    if ($pset[$i+1] =~ /[0-9a-f]/ && $pset[$i+2] =~ /[0-9a-f]/) {
+	    if ($pset[$i+1] =~ /[0-9a-fA-F]/ && $pset[$i+2] =~ /[0-9a-fA-F]/) {
 	        next;
 	    }
 	}
