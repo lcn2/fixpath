@@ -4,13 +4,14 @@
 #
 # usage:
 #
-#	./fixpath [-n] [-v] dir
+#	./fixpath [-n] [-v] [-s] dir
 #
 #	-n	do not rename anything
 #	-v	verbose / debug
+#	-s	strict POSIX chars only
 #
-# @(#) $Revision: 1.1 $
-# @(#) $Id: fixpath.pl,v 1.1 2001/10/26 14:52:45 chongo Exp $
+# @(#) $Revision: 1.2 $
+# @(#) $Id: fixpath.pl,v 1.2 2002/08/20 01:15:54 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
@@ -41,13 +42,13 @@
 #
 use strict;
 use File::Find;
-use vars qw($opt_v $opt_n);
+use vars qw($opt_v $opt_n $opt_s);
 use Getopt::Std;
 
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.1 $, 10;
+my $VERSION = substr q$Revision: 1.2 $, 10;
 $VERSION =~ s/\s+$//;
 
 
@@ -57,7 +58,7 @@ MAIN: {
 
     # parse args
     #
-    if (!getopts('vn') || ! defined $ARGV[0]) {
+    if (!getopts('vns') || ! defined $ARGV[0]) {
 	die "usage: $0 [-n] [-v] dir ...\n";
     }
 
@@ -85,8 +86,21 @@ sub fixfile
 
 	# only portable chars remain unescapted
 	#
-	if ($pset[$i] !~ m:[0-9A-Za-z.,_/-]:) {
-	    $pset[$i] = sprintf("%%%02x", ord($pset[$i]));
+	if (defined $opt_s) {
+	    # only POSIX portable chars
+	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/-]|) {
+		$pset[$i] = sprintf("%%%02x", ord($pset[$i]));
+	    }
+	} elsif ($i == 0) {
+	    # less strict, but avoid problem first file chars
+	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@]|) {
+		$pset[$i] = sprintf("%%%02x", ord($pset[$i]));
+	    }
+	} else {
+	    # less strict on remaining file chars
+	    if ($pset[$i] !~ m|[0-9A-Za-z.,_/@+:~!=-]|) {
+		$pset[$i] = sprintf("%%%02x", ord($pset[$i]));
+	    }
 	}
     }
 
