@@ -4,14 +4,10 @@
 #
 # usage:
 #
-#	./fixpath [-n] [-v] [-s] dir
+#	./fixpath [-n] [-v] [-s] [-i] dir
 #
-#	-n	do not rename anything
-#	-v	verbose / debug
-#	-s	strict POSIX chars only
-#
-# @(#) $Revision: 1.2 $
-# @(#) $Id: fixpath.pl,v 1.2 2002/08/20 01:15:54 chongo Exp chongo $
+# @(#) $Revision: 1.3 $
+# @(#) $Id: fixpath.pl,v 1.3 2002/08/20 01:25:16 chongo Exp chongo $
 # @(#) $Source: /usr/local/src/cmd/fixpath/RCS/fixpath.pl,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
@@ -42,13 +38,13 @@
 #
 use strict;
 use File::Find;
-use vars qw($opt_v $opt_n $opt_s);
+use vars qw($opt_v $opt_n $opt_s $opt_i);
 use Getopt::Std;
 
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.2 $, 10;
+my $VERSION = substr q$Revision: 1.3 $, 10;
 $VERSION =~ s/\s+$//;
 
 
@@ -58,8 +54,13 @@ MAIN: {
 
     # parse args
     #
-    if (!getopts('vns') || ! defined $ARGV[0]) {
-	die "usage: $0 [-n] [-v] dir ...\n";
+    if (!getopts('vnsi') || ! defined $ARGV[0]) {
+	die "usage: $0 [-n] [-v] [-s] [-i] dir ...\n" .
+	    "\n" .
+	    "\t-n\tdo not rename anything\n" .
+	    "\t-v\tverbose / debug\n" .
+	    "\t-s\tstrict POSIX chars only\n" .
+	    "\t-i\tignore \%'s if followed by 2 hex chars\n";
     }
 
     # process lines
@@ -84,7 +85,15 @@ sub fixfile
     #
     for ($i=0; $i <= $#pset; ++$i) {
 
-	# only portable chars remain unescapted
+	# ignore %'s if -i
+	#
+	if (defined $opt_i && $pset[$i] =~ /%/) {
+	    if ($pset[$i+1] =~ /[0-9a-f]/ && $pset[$i+2] =~ /[0-9a-f]/) {
+	        next;
+	    }
+	}
+
+	# only safe/portable chars remain unescapted
 	#
 	if (defined $opt_s) {
 	    # only POSIX portable chars
@@ -111,7 +120,10 @@ sub fixfile
     # rename file
     #
     if ($newpath ne $path) {
-	print "rename $path to $newpath\n" if defined $opt_v;
+	if (defined $opt_v) {
+	    my $dir = "$File::Find::dir";
+	    print "mv -f $dir/$path\t$dir/$newpath\n"
+	}
 	if (! defined $opt_n) {
 	    rename $path, $newpath or die "cannot rename $path $newpath: $!";
 	}
