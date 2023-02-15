@@ -3,8 +3,8 @@
 # fixpath - fix paths that contain non-portable chars by renaming a tree
 #
 # @(#) $Revision: 1.1 $
-# @(#) $Id: Makefile,v 1.1 2001/10/14 11:08:27 chongo Exp $
-# @(#) $Source: /usr/local/src/cmd/rsynchost/RCS/Makefile,v $
+# @(#) $Id: Makefile,v 1.1 2001/10/26 14:52:45 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/fixpath/RCS/Makefile,v $
 #
 # Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
 #
