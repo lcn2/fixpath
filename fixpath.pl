@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w0
+#!/usr/bin/env perl -w
 #
 # fixpath - fix pathnames by replacing bad chars with %xx sequences
 #
@@ -6,11 +6,7 @@
 #
 #	./fixpath [-n] [-v] [-s] [-i] dir
 #
-# @(#) $Revision: 1.7 $
-# @(#) $Id: fixpath.pl,v 1.7 2004/05/21 15:19:59 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/fixpath/RCS/fixpath.pl,v $
-#
-# Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
+# Copyright (c) 2001,2023 by Landon Curt Noll.  All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and
 # its documentation for any purpose and without fee is hereby granted,
