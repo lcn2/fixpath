@@ -1,12 +1,8 @@
-#!/usr/bin/make
+#!/usr/bin/end make
 #
 # fixpath - fix paths that contain non-portable chars by renaming a tree
 #
-# @(#) $Revision: 1.1 $
-# @(#) $Id: Makefile,v 1.1 2001/10/26 14:52:45 chongo Exp $
-# @(#) $Source: /usr/local/src/bin/fixpath/RCS/Makefile,v $
-#
-# Copyright (c) 2001 by Landon Curt Noll.  All Rights Reserved.
+# Copyright (c) 2001,2023 by Landon Curt Noll.  All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and
 # its documentation for any purpose and without fee is hereby granted,
@@ -30,20 +26,23 @@
 #
 # Share and enjoy!
 
-SHELL=/bin/sh
+SHELL= bash
 INSTALL= install
-BINMODE=0555
+BINMODE= 0555
+RM= rm
+CP= cp
+CHMOD= chmod
 
-DESTBIN=/usr/local/bin
+DESTBIN= /usr/local/bin
 
 TARGETS= fixpath
 
 all: ${TARGETS}
 
 fixpath: fixpath.pl
-	-rm -f $@
-	cp $@.pl $@
-	chmod +x $@
+	${RM} -f $@
+	${CP} $@.pl $@
+	${CHMOD} +x $@
 
 install: all
 	${INSTALL} -c -m ${BINMODE} ${TARGETS} ${DESTBIN}
@@ -51,4 +50,4 @@ install: all
 clean:
 
 clobber: clean
-	-rm -f ${TARGETS}
+	${RM} -f ${TARGETS}
