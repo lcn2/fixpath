@@ -1,4 +1,4 @@
-#!/usr/bin/end make
+#!/usr/bin/env make
 #
 # fixpath - fix paths that contain non-portable chars by renaming a tree
 #
