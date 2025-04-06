@@ -2,11 +2,7 @@
 #
 # fixpath - fix pathnames by replacing bad chars with %xx sequences
 #
-# usage:
-#
-#	./fixpath [-n] [-v] [-s] [-i] dir
-#
-# Copyright (c) 2001,2023 by Landon Curt Noll.  All Rights Reserved.
+# Copyright (c) 2001-2002,2004,2023,2025 by Landon Curt Noll.  All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and
 # its documentation for any purpose and without fee is hereby granted,
@@ -26,44 +22,107 @@
 # OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 # PERFORMANCE OF THIS SOFTWARE.
 #
-# chongo <was here> /\oo/\
+# chongo (Landon Curt Noll) /\oo/\
 #
-# Share and enjoy!
+# http://www.isthe.com/chongo/index.html
+# https://github.com/lcn2
+#
+# Share and enjoy!  :-)
+
 
 # requirements
 #
 use strict;
 use bytes;
 use File::Find;
-use vars qw($opt_v $opt_n $opt_s $opt_i);
-use Getopt::Std;
+use vars qw($opt_h $opt_v $opt_V $opt_n $opt_N $opt_s $opt_i);
+use Getopt::Long qw(:config no_ignore_case);
+use File::Basename;
 
-
-# version - RCS style *and* usable by MakeMaker
+# version
 #
-my $VERSION = substr q$Revision: 1.7 $, 10;
-$VERSION =~ s/\s+$//;
+my $VERSION = "1.7.1 2025-04-05";
+
+# my vars
+#
+my $NAME = basename($0);
+
+# usage and help
+#
+my $usage = "$NAME [-h] [-v lvl] [-V] file ...";
+my $help = qq{$usage
+
+    -h          print help and exit
+    -v lvl      verbose / debug level
+    -V          print version and exit
+
+    -n          go thru the actions, but do not update any files (def: do the action)
+    -N          do not process anything, just parse arguments (def: process something)
+
+    -s          strict POSIX chars only
+    -i          ignore \%'s if followed by 2 hex chars
+
+    file ...    file paths to fix
+
+$NAME version: $VERSION};
+my %optctl = (
+    "h" => \$opt_h,
+    "v=i" => \$opt_v,
+    "V" => \$opt_V,
+    "n" => \$opt_n,
+    "N" => \$opt_N,
+    "s" => \$opt_s,
+    "i" => \$opt_i,
+);
+
+
+# function prototypes
+#
+sub error($@);
+
 
 
 # setup
 #
 MAIN: {
 
+    # setup
+    #
+    select(STDOUT);
+    $| = 1;
+
+    # set the defaults
+    #
+    $opt_h = 0;
+    $opt_v = 0;
+    $opt_V = 0;
+
     # parse args
     #
-    if (!getopts('vnsi') || ! defined $ARGV[0]) {
-	die "usage: $0 [-n] [-v] [-s] [-i] dir ...\n" .
-	    "\n" .
-	    "\t-n\tdo not rename anything\n" .
-	    "\t-v\tverbose / debug\n" .
-	    "\t-s\tstrict POSIX chars only\n" .
-	    "\t-i\tignore \%'s if followed by 2 hex chars\n";
+    if (!GetOptions(%optctl)) {
+	print STDERR "$0: invalid command line\nusage: $help";
+	exit(2);
+    }
+    if ($opt_h) {
+        print "$help\n";
+        exit(0);
+    }
+    if ($opt_V) {
+        print "$VERSION\n";
+        exit(0);
+    }
+    if (! defined $ARGV[0]) {
+	print STDERR "$0: requites at least 1 arg\nusage: $help";
+	exit(3);
     }
 
     # process lines
     #
-    finddepth(\&fixfile, @ARGV);
+    if (! defined $opt_N) {
+	finddepth(\&fixfile, @ARGV);
+    }
 }
+
 
 # fixfile - fix a file or directory processed by finddepth
 #
@@ -117,7 +176,7 @@ sub fixfile
     # rename file
     #
     if ($newpath ne $path) {
-	if (defined $opt_v) {
+	if ($opt_v > 0) {
 	    my $dir = "$File::Find::dir";
 	    print "mv -f $dir/$path\t$dir/$newpath\n"
 	}
