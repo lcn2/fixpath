@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env perl
 #
 # fixpath - fix pathnames by replacing bad chars with %xx sequences
 #
@@ -132,7 +132,7 @@ sub fixfile
     my $newpath;	# new nul terminated path
     my @pset;		# $path split into individual chars
     my $i;
-    
+
     # split the path into single chars
     #
     @pset = split(//, $path);
