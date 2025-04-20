@@ -19,8 +19,22 @@ sudo make install
 
 # To use
 
-```sh
-/usr/local/bin/fixpath file ...
+```
+/usr/local/bin/fixpath [-h] [-v lvl] [-V] file ...
+
+    -h          print help and exit
+    -v lvl      verbose / debug level
+    -V          print version and exit
+
+    -n          go thru the actions, but do not update any files (def: do the action)
+    -N          do not process anything, just parse arguments (def: process something)
+
+    -s          strict POSIX chars only
+    -i          ignore %'s if followed by 2 hex chars
+
+    file ...    file paths to fix
+
+fixpath version: 1.7.1 2025-04-05
 ```
 
 When fixpath encounters an awkward char in a filename, it
@@ -34,7 +48,7 @@ Program%20Files by fixpath because ASCII space is hex 0x20.
 By default, fixpath silently fixes files under dir.  Use the `-v 1` option:
 
 ```sh
-/usr/local/bin/fixpath -v 1 some_path
+$ /usr/local/bin/fixpath -v 1 some_path
 ```
 
 to watch what is is doing.
@@ -46,7 +60,7 @@ To see what awkward chars might exist under a directory tree
 but NOT modify/rename anything (look but do not touch mode), use `-n`:
 
 ```sh
-/usr/local/bin/fixpath -n -v 1 some_path
+$ /usr/local/bin/fixpath -n -v 1 some_path
 ```
 
 Technically the % character is not part of the official
@@ -58,13 +72,13 @@ into Program%2520Files.  To avoid this, use the `-i` (ignore
 %'s if followed by 2 hex chars).  So:
 
 ```sh
-/usr/local/bin/fixpath -v 1 -i some_path
+$ /usr/local/bin/fixpath -v 1 -i some_path
 ```
 
 will fix all but %'s and:
 
 ```sh
-/usr/local/bin/fixpath -n -v 1 -i some_path
+$ /usr/local/bin/fixpath -n -v 1 -i some_path
 ```
 
 will check (but not fix) all awkward chars except %'s
@@ -76,7 +90,7 @@ common char set.  So:
 
 fixpath -v -s some_dir
 ```sh
-/usr/local/bin/fixpath -v 1 -s some_path
+$ /usr/local/bin/fixpath -v 1 -s some_path
 ```
 
 will be really strict about awkward chars.	Generally the
