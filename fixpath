@@ -149,7 +149,7 @@ sub fixfile
 	    }
 	}
 
-	# only safe/portable chars remain unescapted
+	# only safe/portable chars remain unescaped
 	#
 	if (defined $opt_s) {
 	    # only POSIX portable chars
